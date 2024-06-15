@@ -5,7 +5,16 @@ import EditNote from './src/screens/editNote'
 
 
 
-const CurrentPageWidget = ({ currentPage, noteList, setCurrentPage, addNote, deleteNote, editNote }) => {
+const CurrentPageWidget = ({
+  currentPage,
+  noteList,
+  setCurrentPage,
+  addNote,
+  deleteNote,
+  editNote,
+  setSelectedNote,
+  selectedNote
+}) => {
   switch (currentPage) {
     case 'home':
       return (
@@ -13,12 +22,14 @@ const CurrentPageWidget = ({ currentPage, noteList, setCurrentPage, addNote, del
           noteList={noteList}
           setCurrentPage={setCurrentPage}
           deleteNote={deleteNote}
+          editNote={editNote}
+          setSelectedNote={setSelectedNote}
         />
       )
     case 'add':
       return <AddNote setCurrentPage={setCurrentPage} addNote={addNote} />
     case 'edit':
-      return <EditNote />
+      return <EditNote selectedNote={selectedNote} setCurrentPage={setCurrentPage} editNote={editNote} />
     default:
       return <Home />
   }
@@ -38,6 +49,8 @@ const App = () => {
     },
   ])
 
+  const [note, setSelectedNote] = useState(null)
+
   const addNote = (title, desc) => {
     const id =
       noteList.length > 0 ? noteList[noteList.length - 1].id + 1 : 1
@@ -53,8 +66,21 @@ const App = () => {
   }
 
   const deleteNote = (id) => {
-    const filteredNote = noteList.filter((note)=> note.id !== id)
+    const filteredNote = noteList.filter((note) => note.id !== id)
     setNoteList(filteredNote)
+  }
+
+  const selectedNote = (id) => {
+    const note = noteList.find((note) => note.id === id)
+    setSelectedNote(note)
+
+  }
+
+  const editNote = (title, desc, id) => {
+    const updatedNotes = noteList.map((note) =>
+      note.id === id ? { ...note, title, desc } : note
+    );
+    setNoteList(updatedNotes)
   }
 
   return (
@@ -64,6 +90,9 @@ const App = () => {
       noteList={noteList}
       addNote={addNote}
       deleteNote={deleteNote}
+      editNote={editNote}
+      setSelectedNote={selectedNote}
+      selectedNote={note}
     />
   )
 }
