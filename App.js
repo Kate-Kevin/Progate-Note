@@ -1,20 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react'
+import Home from './src/screens/home'
+import AddNote from './src/screens/addNote'
+import EditNote from './src/screens/editNote'
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+const CurrentPageWidget = ({ currentPage, noteList, setCurrentPage }) => {
+  switch (currentPage) {
+    case 'home':
+      return (
+        <Home
+          noteList={noteList}
+          setCurrentPage={setCurrentPage}
+        />
+      )
+    case 'add':
+      return <AddNote />
+    case 'edit':
+      return <EditNote />
+    default:
+      return <Home />
+  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const App = () => {
+  const [currentPage, setCurrentPage] = useState('home')
+
+  const [noteList, setNoteList] = useState([
+    {
+      id: 1,
+      title: 'Note pertama',
+      desc:
+        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
+    },
+  ])
+
+  return (
+    <CurrentPageWidget
+      currentPage={currentPage}
+      setCurrentPage={setCurrentPage}
+      noteList={noteList}
+    />
+  )
+}
+
+export default App
